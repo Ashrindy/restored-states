@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(restored-states VERSION 0.0.1
+project(restored-states VERSION 1.0.0
                  DESCRIPTION "Restores Unused States"
                  LANGUAGES CXX)
 
@@ -7,15 +7,16 @@ set(PROJECT_AUTHOR "Ashrindy")
 set(PROJECT_LONG_DESCRIPTION "Restores Unused States")
 set(PROJECT_COPYRIGHT "Copyright (c) 2025 Ashrindy - Licensed under GPL3")
 set(PROJECT_AUTHOR_URL "https://github.com/Ashrindy")
-option(INSTALL_TO_UPDATE_SERVER "Install to update server" OFF)
+set(PROJECT_UPDATE_SERVER, "https://raw.githubusercontent.com//Ashrindy/hmm-update/main/miller/restored-states")
+option(INSTALL_TO_UPDATE_SERVER "Install to update server" ON)
 set(UPDATE_SERVER_PATH "" CACHE PATH "Path to update server")
 string(TIMESTAMP PROJECT_BUILD_DATE "%Y-%m-%d")
 
 set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>")
 
-set(GAME_FOLDER "C:\\Program Files (x86)\\Steam\\steamapps\\common\\SONIC_X_SHADOW_GENEARTIONS" CACHE STRING "The location of your game folder.")
+set(GAME_FOLDER "C:\\Program Files (x86)\\Steam\\steamapps\\common\\SONIC_X_SHADOW_GENERATIONS" CACHE STRING "The location of your game folder.")
 cmake_path(SET GAME_FOLDER_NORMALIZED NORMALIZE ${GAME_FOLDER})
-cmake_path(APPEND GAME_FOLDER_NORMALIZED "SONIC_X_SHADOW_GENEARTIONS.exe" OUTPUT_VARIABLE SONIC_X_SHADOW_GENEARTIONS_GAME_EXECUTABLE)
+cmake_path(APPEND GAME_FOLDER_NORMALIZED "SONIC_X_SHADOW_GENERATIONS.exe" OUTPUT_VARIABLE SONIC_X_SHADOW_GENERATIONS_GAME_EXECUTABLE)
 
 if(DEFINED ENV{MILLER_SDK})
     message("MILLER_SDK environment variable found. Using this version instead of the local submodule.")
@@ -54,11 +55,11 @@ target_compile_definitions(mod
 set_target_properties(mod
     PROPERTIES
         OUTPUT_NAME ${PROJECT_NAME}
-        VS_DEBUGGER_COMMAND ${SONIC_X_SHADOW_GENEARTIONS_GAME_EXECUTABLE}
+        VS_DEBUGGER_COMMAND ${SONIC_X_SHADOW_GENERATIONS_GAME_EXECUTABLE}
         VS_DEBUGGER_WORKING_DIRECTORY ${GAME_FOLDER_NORMALIZED}
 )
 
-foreach(LIB miller-sdk detours)
+foreach(LIB miller-sdk detours mINI)
     target_link_libraries(mod PRIVATE ${LIB})
 endforeach()
 
@@ -68,7 +69,7 @@ configure_file(mod_version.ini.in mod_version.ini)
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT mod)
 
-cmake_path(APPEND GAME_FOLDER_NORMALIZED "Mods" OUTPUT_VARIABLE MODS_FOLDER)
+cmake_path(APPEND GAME_FOLDER_NORMALIZED "mods_shadow" OUTPUT_VARIABLE MODS_FOLDER)
 cmake_path(APPEND MODS_FOLDER "${PROJECT_NAME}" OUTPUT_VARIABLE MOD_FOLDER)
 
 install(TARGETS mod RUNTIME DESTINATION "${MOD_FOLDER}")
@@ -84,7 +85,7 @@ install(CODE "
 ")
 
 if(DEFINED UPDATE_SERVER_PATH_NORMALIZED)
-    cmake_path(APPEND UPDATE_SERVER_PATH_NORMALIZED "sonic-x-shadow-generations/${PROJECT_NAME}" OUTPUT_VARIABLE UPDATE_SERVER_MOD_FOLDER)
+    cmake_path(APPEND UPDATE_SERVER_PATH_NORMALIZED "miller/${PROJECT_NAME}" OUTPUT_VARIABLE UPDATE_SERVER_MOD_FOLDER)
 
     install(TARGETS mod RUNTIME DESTINATION ${UPDATE_SERVER_MOD_FOLDER})
     install(DIRECTORY resources/ DESTINATION ${UPDATE_SERVER_MOD_FOLDER})

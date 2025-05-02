@@ -1,0 +1,39 @@
+{
+  "Groups": [
+    {
+      "Name": "States",
+      "DisplayName": "States",
+      "Elements": [
+        {
+          "Name": "drift",
+          "DisplayName": "Drift",
+          "Description": [],
+          "Type": "bool",
+          "DefaultValue": true
+        },
+        {
+          "Name": "jumpDash",
+          "DisplayName": "Jump Dash",
+          "Description": [],
+          "Type": "bool",
+          "DefaultValue": true
+        },
+        {
+          "Name": "doubleJumpDash",
+          "DisplayName": "Double Jump Dash",
+          "Description": [],
+          "Type": "bool",
+          "DefaultValue": true
+        },
+        {
+          "Name": "lightDash",
+          "DisplayName": "Light Dash",
+          "Description": [],
+          "Type": "bool",
+          "DefaultValue": true
+        }
+      ]
+    }
+  ],
+  "IniFile": "config.ini"
+}

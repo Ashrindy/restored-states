@@ -14,3 +14,13 @@
 #include <miller-sdk.h>
 
 #include <utilities/Helpers.h>
+
+#include <ini.h>
+
+#ifndef PCH_H
+#define PCH_H
+extern bool drift;
+extern bool jumpDash;
+extern bool doubleJumpDash;
+extern bool lightDash;
+#endif

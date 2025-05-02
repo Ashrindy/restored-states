@@ -1,0 +1,9 @@
+[submodule "vendor/detours/Detours"]
+	path = vendor/detours/Detours
+	url = https://github.com/microsoft/Detours.git
+[submodule "miller-sdk"]
+	path = miller-sdk
+	url = https://github.com/Ashrindy/miller-sdk
+[submodule "vendor/mINI/mINI"]
+	path = vendor/mINI/mINI
+	url = https://github.com/metayeti/mINI.git
