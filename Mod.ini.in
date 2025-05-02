@@ -6,7 +6,7 @@ Description="${PROJECT_LONG_DESCRIPTION}"
 Date="${PROJECT_BUILD_DATE}"
 AuthorURL="${PROJECT_AUTHOR_URL}"
 [Main]
-UpdateServer="${PROJECT_UPDATE_SERVER}"
+UpdateServer="https://raw.githubusercontent.com/Ashrindy/hmm-update/main/miller/restored-states"
 SaveFile=""
 ID="${PROJECT_AUTHOR}.${PROJECT_NAME}"
 IncludeDir0="."
