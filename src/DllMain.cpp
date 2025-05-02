@@ -87,9 +87,10 @@ HOOK(void, __fastcall, BindMaps, 0x140A2FEC0, hh::game::GameManager* gameManager
 	if (drift) {
 		inputSettings->BindActionMapping("PlayerDrift", 0x1000Du);
 		inputSettings->BindActionMapping("PlayerDrift", 0x200e1u);
-
-		originalBindMaps(gameManager, inputSettings);
 	}
+	if (lightDash)
+		inputSettings->BindActionMapping("PlayerLightDash", 0x2001du);
+	originalBindMaps(gameManager, inputSettings);
 }
 
 bool StateStandUpdate(app::player::StateStand* self, app::player::PlayerHsmContext* context, float deltaTime) {
