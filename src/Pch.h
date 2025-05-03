@@ -23,4 +23,8 @@ extern bool drift;
 extern bool jumpDash;
 extern bool doubleJumpDash;
 extern bool lightDash;
+extern bool stompBounce;
+extern bool stompBounceLightning;
+extern bool stompBounceLightningFix;
+extern bool legacyControls;
 #endif

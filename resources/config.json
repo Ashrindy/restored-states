@@ -7,30 +7,68 @@
         {
           "Name": "drift",
           "DisplayName": "Drift",
-          "Description": [],
+          "Description": ["Restores the drift."],
           "Type": "bool",
           "DefaultValue": true
         },
         {
           "Name": "jumpDash",
           "DisplayName": "Jump Dash",
-          "Description": [],
+          "Description": [
+            "Restores the Jump Dash, only works on the first jump."
+          ],
           "Type": "bool",
           "DefaultValue": true
         },
         {
           "Name": "doubleJumpDash",
           "DisplayName": "Double Jump Dash",
-          "Description": [],
+          "Description": [
+            "Restores the Jump Dash, only works on the second jump."
+          ],
           "Type": "bool",
           "DefaultValue": true
         },
         {
           "Name": "lightDash",
-          "DisplayName": "Light Dash",
-          "Description": [],
+          "DisplayName": "Light Speed Dash",
+          "Description": ["Restores the Light Speed Dash."],
           "Type": "bool",
           "DefaultValue": true
+        },
+        {
+          "Name": "stompBounce",
+          "DisplayName": "Stomp Bounce",
+          "Description": ["Restores the stomp bounce from Sonic Frontiers."],
+          "Type": "bool",
+          "DefaultValue": true
+        },
+        {
+          "Name": "stompBounceLightning",
+          "DisplayName": "Stomp Bounce Lightning",
+          "Description": [
+            "Restores the stomp bounce third last stomp from Sonic Frontiers. Requires Stomp Bounce to be on."
+          ],
+          "Type": "bool",
+          "DefaultValue": true
+        },
+        {
+          "Name": "stompBounceFix",
+          "DisplayName": "Stomp Bounce Lightning Fix",
+          "Description": [
+            "Changes the third stomp particles to a more Shadow fitting color. Requires Stomp Bounce Lightning"
+          ],
+          "Type": "bool",
+          "DefaultValue": true
+        },
+        {
+          "Name": "legacyControls",
+          "DisplayName": "Legacy Controls",
+          "Description": [
+            "Changes Jump Dash to RT, and Drift to B. Meant to be used with the in-game Legacy controls option."
+          ],
+          "Type": "bool",
+          "DefaultValue": false
         }
       ]
     }

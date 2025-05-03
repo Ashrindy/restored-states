@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(restored-states VERSION 1.0.1
+project(restored-states VERSION 1.1.0
                  DESCRIPTION "Restores Unused States"
                  LANGUAGES CXX)
 
