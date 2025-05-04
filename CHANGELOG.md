@@ -1,3 +1,12 @@
+# V1.1.1
+
+- Fixed not being able to Jump Dash from a grind rail
+- Fixed falling through water when using Jump Dash
+- Fixed not being able to Double Jump, Light Speed Dash, Homing Attack and Jump Dash when Stomp Bouncing
+- Fixed a typo in the config
+- Fixed the Stomp Bounce Lightning Fix not working
+- Fixed the bounce counter not resetting
+
 # V1.1.0
 
 - Restored the Stomp Bounce

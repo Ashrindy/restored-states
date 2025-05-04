@@ -29,6 +29,26 @@ void doLightDash(app::player::PlayerHsmContext* context) {
 	}
 }
 
+void doHomingAttack(app::player::PlayerHsmContext* context) {
+	if (auto* input = context->playerObject->GetComponent<hh::game::GOCInput>()) {
+		if (auto* inputcomp = input->GetInputComponent()) {
+			if (inputcomp->actionMonitors[1].state & 512) {
+				context->playerObject->GetComponent<app::player::GOCPlayerHsm>()->hsm.ChangeState(62);
+			}
+		}
+	}
+}
+
+void doDoubleJump(app::player::PlayerHsmContext* context) {
+	if (auto* input = context->playerObject->GetComponent<hh::game::GOCInput>()) {
+		if (auto* inputcomp = input->GetInputComponent()) {
+			if (inputcomp->actionMonitors[0].state & 512) {
+				context->playerObject->GetComponent<app::player::GOCPlayerHsm>()->hsm.ChangeState(10);
+			}
+		}
+	}
+}
+
 static const float driftZone = .075f;
 
 void doDrift(app::player::PlayerHsmContext* context) {
@@ -39,6 +59,14 @@ void doDrift(app::player::PlayerHsmContext* context) {
 			}
 		}
 	}
+}
+
+static int bounce = -1;
+
+void resetBounce()
+{
+	if (stompBounceLightning)
+		bounce = -1;
 }
 
 FUNCTION_PTR(int64_t, __fastcall, shouldDSurf, 0x140704D80, app::player::PlayerHsmContext*, char);
@@ -59,6 +87,7 @@ HOOK(bool, __fastcall, JumpStep, 0x14A7C1140, app::player::StateJump* self, app:
 		doJumpDash(context);
 	if (lightDash)
 		doLightDash(context);
+	resetBounce();
 	return res;
 }
 
@@ -68,6 +97,7 @@ HOOK(bool, __fastcall, DoubleJumpStep, 0x14A7ADE20, app::player::StateDoubleJump
 		doJumpDash(context);
 	if (lightDash)
 		doLightDash(context);
+	resetBounce();
 	return res;
 }
 
@@ -77,6 +107,13 @@ HOOK(bool, __fastcall, RunStep, 0x1406C7760, app::player::StateRun* self, app::p
 		doDrift(context);
 	if(lightDash)
 		doLightDash(context);
+	resetBounce();
+	return res;
+}
+
+HOOK(bool, __fastcall, JumpDashStep, 0x1406C2C10, app::player::StateJumpDash* self, app::player::PlayerHsmContext* context, float deltaTime) {
+	auto res = originalJumpDashStep(self, context, deltaTime);
+	shouldDSurf(context, 0);
 	return res;
 }
 
@@ -84,6 +121,24 @@ HOOK(bool, __fastcall, DriftStep, 0x1406AF920, app::player::StateDrift* self, ap
 	auto res = originalDriftStep(self, context, deltaTime);
 	if (drift)
 		doDefault(context);
+	return res;
+}
+
+HOOK(bool, __fastcall, GrindJumpStep, 0x1406BEC50, int64_t self, app::player::PlayerHsmContext* context, float deltaTime) {
+	auto res = originalGrindJumpStep(self, context, deltaTime);
+	if (lightDash)
+		doLightDash(context);
+	if (jumpDash)
+		doJumpDash(context);
+	return res;
+}
+
+HOOK(bool, __fastcall, GrindDoubleJumpStep, 0x1406BEAB0, int64_t self, app::player::PlayerHsmContext* context, float deltaTime) {
+	auto res = originalGrindJumpStep(self, context, deltaTime);
+	if (lightDash)
+		doLightDash(context);
+	if (doubleJumpDash)
+		doJumpDash(context);
 	return res;
 }
 
@@ -107,13 +162,10 @@ HOOK(void, __fastcall, BindMaps, 0x140A2FEC0, hh::game::GameManager* gameManager
 	originalBindMaps(gameManager, inputSettings);
 }
 
-static int bounce = -1;
-
 bool StateStandUpdate(app::player::StateStand* self, app::player::PlayerHsmContext* context, float deltaTime) {
 	if(lightDash)
 		doLightDash(context);
-	if(stompBounceLightning)
-		bounce = -1;
+	resetBounce();
 	return false;
 }
 
@@ -167,7 +219,7 @@ static hh::fnd::ResourceLoader* resourceLoader;
 
 HOOK(int64_t, __fastcall, GameModeBootInit, 0x1475455B0, int64_t self) {
 	resourceLoader = hh::fnd::ResourceLoader::Create(hh::fnd::MemoryRouter::GetModuleAllocator());
-	if (drift)
+	if (drift || stompBounceLightningFix)
 		resourceLoader->LoadPackfile2("shadow_fixes.pac");
 	return originalGameModeBootInit(self);
 }
@@ -205,6 +257,7 @@ HOOK(bool, __fastcall, SlidingEnter, 0x1406CBB70, app::player::StateSliding* sel
 	if (!legacyControls)
 		if (drift)
 			doDrift(context);
+	resetBounce();
 	return res;
 }
 
@@ -214,6 +267,24 @@ HOOK(bool, __fastcall, BounceJumpEnter, 0x1406C06E0, app::player::StateBounceJum
 	auto res = originalBounceJumpEnter(self, context, previousState);
 	if (bounce == 2)
 		context->gocPlayerHsm->hsm.ChangeState(20);
+	return res;
+}
+
+HOOK(bool, __fastcall, BounceJumpStep, 0x1406C1C80, app::player::StateBounceJump* self, app::player::PlayerHsmContext* context, float deltaTime) {
+	auto res = originalBounceJumpStep(self, context, deltaTime);
+	if (jumpDash)
+		doJumpDash(context);
+	if (lightDash)
+		doLightDash(context);
+	doHomingAttack(context);
+	doDoubleJump(context);
+	return res;
+}
+
+HOOK(bool, __fastcall, FallStep, 0x1406B82C0, app::player::StateBounceJump* self, app::player::PlayerHsmContext* context, float deltaTime) {
+	auto res = originalFallStep(self, context, deltaTime);
+	if (lightDash)
+		doLightDash(context);
 	return res;
 }
 
@@ -240,10 +311,14 @@ BOOL WINAPI DllMain(_In_ HINSTANCE hInstance, _In_ DWORD reason, _In_ LPVOID res
 		INSTALL_HOOK(JumpStep);
 		INSTALL_HOOK(StompingLandEnter);
 		INSTALL_HOOK(BounceJumpEnter);
+		INSTALL_HOOK(BounceJumpStep);
 		INSTALL_HOOK(DoubleJumpStep);
 		INSTALL_HOOK(MasterLevelLoad);
 		INSTALL_HOOK(EffectLoad);
 		INSTALL_HOOK(SlidingEnter);
+		INSTALL_HOOK(JumpDashStep);
+		INSTALL_HOOK(GrindJumpStep);
+		INSTALL_HOOK(GrindDoubleJumpStep);
 		if (drift || lightDash) {
 			INSTALL_HOOK(RunStep);
 			INSTALL_HOOK(PlayerAddCallback);

@@ -65,7 +65,7 @@
           "Name": "legacyControls",
           "DisplayName": "Legacy Controls",
           "Description": [
-            "Changes Jump Dash to RT, and Drift to B. Meant to be used with the in-game Legacy controls option."
+            "Changes Jump Dash and Drift to RT. Meant to be used with the in-game Legacy controls option."
           ],
           "Type": "bool",
           "DefaultValue": false

@@ -25,7 +25,7 @@ EXPORT void Init()
 	lightDash = states["lightDash"] == "True";
 	stompBounce = states["stompBounce"] == "True";
 	stompBounceLightning = states["stompBounceLightning"] == "True";
-	stompBounceLightningFix = states["stompBounceLightningFix"] == "True";
+	stompBounceLightningFix = states["stompBounceFix"] == "True";
 	legacyControls = states["legacyControls"] == "True";
 }
 
